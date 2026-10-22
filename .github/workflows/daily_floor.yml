@@ -1,0 +1,26 @@
+name: Daily Redo Floor Price Notifier
+
+on:
+  schedule:
+    # هر روز ساعت 10:00 صبح به وقت ایران (06:30 UTC)
+    - cron: '30 6 * * *'
+  # امکان اجرای دستی و تستی در هر لحظه
+  workflow_dispatch:
+
+jobs:
+  send-price:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Floor Price Script
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: python send_floor.py
